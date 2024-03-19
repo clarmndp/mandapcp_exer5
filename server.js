@@ -13,18 +13,23 @@ app.get('/find-by-isbn-author', (req, res) => {
     const lines = data.split('\n');
     const results = [];
 
-    lines.forEach(line.split(','));
-    if(lineElement[2] === req.query.author && lineElement[1] == req.query.isbn) {
+    if(lineElement[1] == req.query.isbn) {
       console.log('Found it:' + line);
       results.push(line);
     }
+    lines.forEach(line.split(','));
+    if(lineElement[2] === req.query.author) {
+      console.log('Found it:' + line);
+      results.push(line);
+    }
+    
 });
   res.json(results);
 });
 
 //#3
 app.get('/find-by-author', (req, res) => {
-  fs.readFile('b-books.txt', "utf8", (err, data) => {
+  fs.readFile('books.txt', "utf8", (err, data) => {
     if(err) throw err;
     const lines = data.split('\n');
     const results = [];
@@ -38,9 +43,12 @@ app.get('/find-by-author', (req, res) => {
   res.json(results);
 });
 
+app.post('/find-by-author', (req, res) => {
+  res.send(req.body.results);
+});
+
 //file append in books.txt
-app.post('/submit-data', (req, res) => {
-  //res.send('Received a POST request.' + req.body.name);
+app.post('/add-book', (req, res) => {
   if(req.body.name != '' & req.body.isbn != '' & req.body.author != ''){
     appendFileSync('books.txt', req.body.name + ',' + req.body.isbn + ',' + req.body.author + ',' + req.body.year + ',' + "\n");
     return {success: true};
